@@ -4,12 +4,14 @@ uses crt;
 const 
 preciog= 20;
 precion= 12;
-precioe =0;
+precioe=0;
+
+
 var 
 option: char;
 optionn: char;
 option1: char;
-
+si: char;
 nombre: string;
 apellido: string;
 cedula: string;
@@ -36,7 +38,7 @@ BEGIN
 asidisp:= 60;
 bolven:= 0;
 pgeneral:=0;
-
+si:='0';
 
 
 Repeat
@@ -154,27 +156,31 @@ Repeat
 					
 					writeln('Usted esta viajando con ninos? 1.si 2.no');
 					readln(optionn);
-
-					  if optionn = '1' then
 					
-							Writeln ('Ingrese la cantidad de boletos para ninos menores de 3');
-							readln (cantbolex);
-							Writeln ('Ingrese la cantidad de boletos para ninos (3 a 12 anos)');
-							readln (cantboln)
-							
-					  Else
-					  						
+					case optionn of
+					'1':
+					begin
+						Writeln ('Ingrese la cantidad de boletos para ninos menores de 3');
+						readln (cantbolex);
+						Writeln ('Ingrese la cantidad de boletos para ninos (3 a 12 anos)');
+						readln (cantboln);
 						writeln('Esta viajando con adultos mayores? 1.si 2.no');
 						readln(option1);
-					
-						
-					if option1='1' then
+						if option1='1' then
+						begin
 							Writeln ('Ingrese la cantidad de boletos para adultos mayores');
 							readln (cantbolv);
-							
-						If option1='2' then
+						end
+						else
 						writeln ('Sus boletos estan siendo procesados');
-					  end;
+						
+					end;
+					'2':
+					begin
+					Writeln ('Ingrese la cantidad de boletos para adultos mayores');
+					readln (cantbolv);
+					end;
+					end;
 
 					
 					clrscr;
