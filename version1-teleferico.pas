@@ -21,7 +21,7 @@ cedula: string;
 
 tramo: integer;
 //listo
-estacion: char;
+estacion: string;
 est1: string;
 //listo
 est2: string;
@@ -46,6 +46,10 @@ pbolp:integer;
 pbolex:integer;
 mtotal:integer;
 
+numero: Integer;
+codigoError: Integer;
+
+
 BEGIN
 asidisp:= 60;
 bolven:= 0;
@@ -58,6 +62,7 @@ tboln:=0;
 tbolv:=0;
 tbole:=0;
 Montot:=0;
+tramo:=0;
 
 
 est1:= 'Barinitas';
@@ -82,17 +87,26 @@ Repeat
 			case (option) of
 				'1': 
 				begin 
+				repeat
 				writeln('');
 				writeln('|----------------------------------|');
 				writeln('|-- Ingrese su nombre y apellido --|');
 				writeln('|----------------------------------|');
 				readln (nombre);
+				Val(nombre, numero, codigoError);
+				clrscr;
+				until codigoError = 1;
+				repeat
 				writeln('');
 				writeln('|----------------------------------|');
 				writeln('|-------- Ingrese su cédula -------|');
 				writeln('|----------------------------------|');
 				readln (cedula);
+				Val(cedula, numero, codigoError);
 				clrscr;
+				until codigoError = 0;
+				
+				
 				
 				writeln('');	
 				writeln('  A continuación se mostrarán las estaciones y tramos que puedes visitar');	
@@ -112,36 +126,43 @@ Repeat
 				writeln('   y los niños menores de 12 deben ir acompañados de un adulto. ');
 	            writeln('');
 					
-				repeat 
-				writeln('          |--------------------------------------------------|');
-				writeln('          |------ Indique la estación que desea visitar -----|');
-				writeln('          |--------------------------------------------------|');
-				readln (estacion);
+				repeat
+					repeat 
+						repeat
+						writeln('          |--------------------------------------------------|');
+						writeln('          |------ Indique la estación que desea visitar -----|');
+						writeln('          |--------------------------------------------------|');
+						readln (estacion);
+						Val(estacion, numero, codigoError);
+					
+				
 				
 					
-					case (estacion) of
-						'1': begin
-							writeln('     Usted se encuentra en Barinitas, por favor escoja otra estacion');
-						end;
-						'2': begin
-							tramo:= 1;
-							est2:='La Montana';
-						end;
-						'3': begin
-							tramo:= 2;
-							est2:='La Aguada';
-						end;
-						'4': begin
-							tramo:= 3;
-							est2:='Loma redonda';
-						end;
-						'5': begin
-							tramo:= 4;
-							est2:='Pico Espejo';
-						end;
-						end;
-						writeln('');
-				until estacion<>'1';
+							case (estacion) of
+								'1': begin
+									writeln('     Usted se encuentra en Barinitas, por favor escoja otra estacion');
+								end;
+								'2': begin
+									tramo:= 1;
+									est2:='La Montana';
+								end;
+								'3': begin
+									tramo:= 2;
+									est2:='La Aguada';
+								end;
+								'4': begin
+									tramo:= 3;
+									est2:='Loma redonda';
+								end;
+								'5': begin
+									tramo:= 4;
+									est2:='Pico Espejo';
+								end;
+								end;
+								writeln('');
+						until estacion <> '1'
+					until tramo <> 0;
+				until codigoError = 0;
 					clrscr;
 					
 					
@@ -179,6 +200,7 @@ Repeat
 				Writeln('');
 				writeln('          Ingrese la cantidad de boletos generales'      );
 				readln(cantbolg);
+				
 				writeln('            |----------------------------------|');
 				writeln('            |  ¿Usted está viajando con niños? |');
 				writeln('            |----------------------------------|');
