@@ -1,29 +1,19 @@
 program teleferico;
 {$codepage UTF8}
-uses crt;
-const 
-preciog= 20;
-precion= 12;
-precioe=0;
-
+uses crt, SysUtils;
 
 var 
-//listo
+
 option: char;
-//
 optionn: char;
 option1: char;
-si: char;
 
-//listo
 nombre: string;
 cedula: string;
 
 tramo: integer;
-//listo
 estacion: string;
 est1: string;
-//listo
 est2: string;
 
 cantbolg: integer;
@@ -31,14 +21,11 @@ cantboln: integer;
 cantbolex: integer;
 cantbolv: integer;
 
+cantbolg1, cantbolex1, cantboln1, cantbolv1: string; // esto y el sysutils para el resto de las validaciones
+
+
 asidisp: integer;
 bolven: integer;
-//Variables para el reporte
-ventas: integer;
-pgeneral:integer;
-tbolven, tbolg, tboln, tbolv, tbole:integer;
-montot, tbol:integer;
-
 
 pbolg:integer;
 pbolk:integer;
@@ -49,23 +36,12 @@ mtotal:integer;
 numero: Integer;
 codigoError: Integer;
 
-
 BEGIN
 asidisp:= 60;
 bolven:= 0;
-pgeneral:=0;
-ventas:=0;
 cantbolg:=0;
-tbolven:=0;
-tbolg:=0;
-tboln:=0;
-tbolv:=0;
-tbole:=0;
-Montot:=0;
-tramo:=0;
-
-
 est1:= 'Barinitas';
+
 
 
 Repeat
@@ -126,44 +102,36 @@ Repeat
 				writeln('   y los niños menores de 12 deben ir acompañados de un adulto. ');
 	            writeln('');
 					
-				repeat
-					repeat 
-						repeat
+				repeat // Para que la opcion ingresada sea valida
 						writeln('          |--------------------------------------------------|');
 						writeln('          |------ Indique la estación que desea visitar -----|');
 						writeln('          |--------------------------------------------------|');
 						readln (estacion);
-						Val(estacion, numero, codigoError);
 					
+					case (estacion) of
+						'2': begin
+							tramo:= 1;
+							est2:='La Montana';
+						end;
+						'3': begin
+							tramo:= 2;
+							est2:='La Aguada';
+						end;
+						'4': begin
+							tramo:= 3;
+							est2:='Loma redonda';
+						end;
+						'5': begin
+							tramo:= 4;
+							est2:='Pico Espejo';
+						end;
+						end;
+						writeln('');
+					clrscr;	
+				until tramo <> 0;
 				
 				
 					
-							case (estacion) of
-								'1': begin
-									writeln('     Usted se encuentra en Barinitas, por favor escoja otra estacion');
-								end;
-								'2': begin
-									tramo:= 1;
-									est2:='La Montana';
-								end;
-								'3': begin
-									tramo:= 2;
-									est2:='La Aguada';
-								end;
-								'4': begin
-									tramo:= 3;
-									est2:='Loma redonda';
-								end;
-								'5': begin
-									tramo:= 4;
-									est2:='Pico Espejo';
-								end;
-								end;
-								writeln('');
-						until estacion <> '1'
-					until tramo <> 0;
-				until codigoError = 0;
-					clrscr;
 					
 					
 				writeln('  |--------------------------------------------------|');
@@ -183,7 +151,7 @@ Repeat
 				writeln('  |                                                  |');
 				writeln('  |--------------------------------------------------|');
 				writeln('  |                                                  |');
-				writeln('  |   4.Boleto especial (menores de 3 años): GRATIS  |');
+				writeln('  |   4.Boleto exonerado(menores de 3 años): GRATIS  |');
 				writeln('  |         Los niños menores de 3 años serán        |');	
 				writeln('  |          exonerados el pago. Sin embargo         |');
 				writeln('  |     ¡SOLO PUEDEN  VIAJAR HASTA LOMA REDONDA!     |');
@@ -194,31 +162,51 @@ Repeat
 				readln();
 				clrscr;
 				
+				repeat
 				writeln('    |--------------------------------------------------|');
 				writeln('    |--------------- Empecemos la compra --------------|');
 				writeln('    |--------------------------------------------------|');	
 				Writeln('');
 				writeln('          Ingrese la cantidad de boletos generales'      );
-				readln(cantbolg);
+				readln(cantbolg1);
+				Val(cantbolg1, numero, codigoError);
+				clrscr;	
+				until codigoError = 0;
+				cantbolg:= cantbolg + StrToInt(cantbolg1);
 				
+				repeat
 				writeln('            |----------------------------------|');
 				writeln('            |  ¿Usted está viajando con niños? |');
 				writeln('            |----------------------------------|');
 				writeln('            |---------- 1.Si --- 2.No ---------|');
 				writeln('            |----------------------------------|');
 				readln(optionn);
+				clrscr;	
+				until (optionn = '1') or (optionn = '2');
 					
 					case optionn of
 					'1':
 					begin
+						repeat// repeat para validar
 						Writeln('          Ingrese la cantidad de boletos especiales'     );
 						writeln('                  (niños menores de 3 años)'      );
-						readln (cantbolex);
+						readln (cantbolex1);
+						Val(cantbolex1, numero, codigoError);
+						clrscr;	
+						until codigoError = 0;
+						cantbolex:= StrToInt(cantbolex1); // tranformacion del numero validado en un entero
 						
+						
+						repeat// repeat para validar
 						Writeln('      Ingrese la cantidad de Boletos Kids (3 a 12 años)' );
 						writeln('                    (niños de 3 a 12 años)'      );
-						readln (cantboln);
+						readln (cantboln1);
+						Val(cantboln1, numero, codigoError);
+						clrscr;	
+						until codigoError = 0;
+						cantboln:= StrToInt(cantboln1); // tranformacion del numero validado en un entero
 						
+						repeat
 						writeln('            |----------------------------------|');
 						writeln('            |     ¿Usted está viajando con     |');
 						writeln('            |   personas de la tercera edad?   |');
@@ -226,18 +214,26 @@ Repeat
 						writeln('            |---------- 1.Si --- 2.No ---------|');
 						writeln('            |----------------------------------|');
 						readln(option1);
+						clrscr;	
+						until (option1 = '1') or (option1 = '2');
 						
 						if option1='1' then
 						begin
+						repeat// repeat para validar
 							Writeln('        Ingrese la cantidad de boletos preferenciales');
-							readln (cantbolv);
+							readln (cantbolv1);
+							Val(cantbolv1, numero, codigoError);
+							clrscr;	
+							until codigoError = 0;
+							cantbolv:= StrToInt(cantbolv1); // tranformacion del numero validado en un entero
+							writeln('        Presione la tecla (enter) para continuar...');
+							readln ();
 						end
-						else
-							writeln('Sus boletos estan siendo procesados, presione la tecla (enter) para continuar ');
-							readln();
+						
 					end;
 					'2':
 					begin
+						repeat
 						writeln('            |----------------------------------|');
 						writeln('            |     ¿Usted está viajando con     |');
 						writeln('            |   personas de la tercera edad?   |');
@@ -245,16 +241,20 @@ Repeat
 						writeln('            |---------- 1.Si --- 2.No ---------|');
 						writeln('            |----------------------------------|');
 						readln(option1);
+						clrscr;	
+						until (option1 = '1') or (option1 = '2');
 						if option1='1' then
 						begin
+							repeat// repeat para validar
 							Writeln('        Ingrese la cantidad de boletos preferenciales');
-							readln (cantbolv);
-							writeln('Presione la tecla (enter) para continuar...');
+							readln (cantbolv1);
+							Val(cantbolv1, numero, codigoError);
+							clrscr;	
+							until codigoError = 0;
+							cantbolv:= StrToInt(cantbolv1); // tranformacion del numero validado en un entero
+							writeln('        Presione la tecla (enter) para continuar...');
 							readln ();
 						end
-						else
-							writeln('Sus boletos estan siendo procesados, presionela tecla (enter) para continuar ');
-							readln();
 					end;
 					end;
 					clrscr;
@@ -267,53 +267,66 @@ Repeat
 				mtotal:=pbolg+pbolk+pbolex+pbolp;	
 					
 					
-					
 				writeln('');
-				writeln(' ----------------------------------');
-				writeln(' ------------- Factura ------------');
-				writeln(' ----------------------------------');
+				writeln('  ----------------------------------');
+				writeln('  ------------- Factura ------------');
+				writeln('  ----------------------------------');
 				writeln('  Nombre: ', nombre,'              ');
 				writeln('  Cedula: ', cedula);
-				writeln('  ---------------------------------');
+				writeln('  ----------------------------------');
 				writeln('  Tramos recorridos: ',tramo);
 				writeln('  Estacion de salida: ',est1);
 				writeln('  Estacion de llegada: ',est2);
-				writeln('  ---------------------------------');
-				writeln('  Boletos generales:',cantbolg,'---- $',pbolg);
-				writeln('  Boletos kids: ',cantboln,'---- $',pbolk);
-				writeln('  Boletos preferenciales: ',cantbolv,'----$',pbolp);
-				writeln('  Boletos exonerados: ',cantbolex,'----$',pbolex);
-				writeln('  ---------------------------------');
-				writeln('  Total de boletos: ',bolven);
-				writeln('  ---------------------------------');
-				writeln('  Total a pagar: -------------$',mtotal);
-				writeln('  ---------------------------------');
+				writeln('  ----------------------------------');
+				writeln('  Boletos generales: ',cantbolg,' ........ $',pbolg);
+				writeln('  Boletos kids: ',cantboln,' ............. $',pbolk);
+				writeln('  Boletos preferenciales: ',cantbolv,' ... $',pbolp);
+				writeln('  Boletos exonerados: ',cantbolex,' ....... $',pbolex);
+				writeln('  ----------------------------------');
+				writeln('  Total de boletos: ............ ',bolven);
+				writeln('  ----------------------------------');
+				writeln('  Total a pagar: ............. $',mtotal);
+				writeln('  ----------------------------------');
 				writeln('');
 				writeln('Presione la tecla (enter) para continuar...');
 				readln();	
+				clrscr;	
 					
 			end;
 			'2':
 			begin
 			
-			writeln('');
-			writeln('-----Reporte del dia-----');
-			writeln('Ventas realizadas: ',ventas+1);
-			writeln('Asientos disponibles para el proximo viaje: ',asidisp-bolven);
-			writeln('------------------');
-			writeln('Boletos generales vendidos:',tbol+cantbolg);
-			writeln('Boletos para ninos vendidos: ',tbol+cantboln);
-			writeln('Boletos exonerados: ',tbole+cantbolex);
-			writeln('Boletos vendidos: ',tbolven+bolven); 
-			writeln('------------------');
-			writeln('Monto total de las ventas de boletos generales. '' Boletos(20$): $.');
-			writeln('Monto total de las ventas de boletos especiales. '' Boletos(12$): $.');
-			writeln('Monto total de las ventas: $.',montot+precion*cantboln+precioe*cantbolex+preciog*cantbolg+precion*cantbolv);
-			writeln('------------------');
-			writeln('');
-			writeln('Presione la tecla (enter) para continuar...');
-			readln();
 			ClrScr;
+			    writeln('');
+				writeln('  ----------------------------------');
+				writeln('  --------- Reporte del día --------');
+				writeln('  ----------------------------------');
+				writeln('  Ventas realizadas:');
+				writeln('  Asientos disponibles:',asidisp-bolven);
+				writeln('  Asientos ocupados: ',bolven);
+				writeln('  ----------------------------------');
+				writeln('  -------- Boletos vendidos --------');
+				writeln('  ----------------------------------');
+				writeln('  Boletos generales: ');
+				writeln('  Boletos Kids: ');
+				writeln('  Boletos preferenciales: ');
+				writeln('  Boletos exonerados: ');
+				writeln('  ----------------------------------');
+				writeln('  Total de boletos vendidos:');
+				writeln('  ----------------------------------');
+				writeln('  ------------- Montos -------------');
+				writeln('  ----------------------------------');
+				writeln('  Boletos generales:');
+				writeln('  Boletos Kids: ');
+				writeln('  Boletos preferenciales: ');
+				writeln('  ----------------------------------');
+				writeln('  ----------------------------------');
+				writeln('  Monto total:');
+				writeln('  ----------------------------------');
+				writeln('');
+				writeln('Presione la tecla (enter) para continuar');
+				readln();
+				ClrScr;
 			end;
 			
 			
@@ -321,11 +334,19 @@ Repeat
 			begin
 			writeln ('Gracias por visitarnos,vuelva pronto');
 			writeln('');
-			writeln('Presione la tecla (enter) para continuar...');
+			writeln('Presione dos veces la tecla (enter) para salir...');
 			readln();
 			ClrScr;
 			end;
 			end;
+			
+cantbolg:=0;
+cantboln:=0;
+cantbolv:=0;
+cantbolex:=0;
+tramo:= 0;
+
 		
 until option='3';
+
 end.
