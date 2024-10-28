@@ -1,0 +1,512 @@
+PROGRAMA Teleférico
+
+// Declarar variables
+  //variables para los case
+  option, option, option1, infante: caracter
+  estacion: cadena
+
+  //datos del usuario
+  nombre, cedula: cadena
+  tramo: entero 
+  est1, est2: cadena 
+
+  //cantidad de boletos
+  cantbolg, cantboln, cantbolex, cantbolv: entero
+
+  //asientos disponibles y boletos vendidos
+  asidisp, bolven: byte
+
+  //precios
+  pbolg, pbolk, pbolp, pbolex, mtotal: entero
+
+  //cantidad de ventas realizadas
+  ventas: entero
+
+  //Montos de todas las ventas 
+  mf, mfg, mfk, mfp: entero
+
+  // Cantidad de boletos vendidos en todas las ventas
+  tbolg, tbolk, tbolp, tbole, tbolven: entero
+
+  //variables para validar
+  numero, codigoError, i: entero
+  cantbolg1, cantbolex1, cantboln1, cantbolv1: cadena    
+
+
+INICIO
+// Inicializar variables
+  est1:= 'Barinitas'
+  asidisp:= 60;
+  bolven:= 0;
+  cantbolg:=0;
+  cantbolex:=0;
+  tramo:=0;
+  tbolven:=0;
+  ventas:=0;
+  mf:=0;
+  mfg:=0;
+  mfk:=0;
+  mfp:=0;
+  tbolg:=0;
+  tbolk:=0;
+  tbolp:=0;
+  tbole:=0;  
+
+REPETIR 
+    LIMPIAR_PANTALLA
+    ESCRIBIR('')
+    ESCRIBIR( '    +----------------------------------+')
+    ESCRIBIR( '    |           ¡Bienvenido            |')
+    ESCRIBIR( '    |     al Teleférico de Mérida!     |') 
+    ESCRIBIR( '    +----------------------------------+')
+    ESCRIBIR( '    |-------- Opciones del menú -------|')
+    ESCRIBIR( '    |----------------------------------|')
+    ESCRIBIR( '    | Presione (1) para comprar boleto |')
+    ESCRIBIR( '    | Presione (2) para ver sistema    |')
+    ESCRIBIR( '    | Presione (3) para salir          |')
+    ESCRIBIR( '    +----------------------------------+')
+    ESCRIBIR('')
+    LEER option
+    LIMPIAR_PANTALLA
+
+    SEGUN option HACER
+    '1':
+    INICIO 
+        SI asidisp = 0 ENTONCES // Revisa si hay boletos disponibles
+        INICIO
+            ESCRIBIR('  +--------------------------------------------------+')
+            ESCRIBIR('  |--------------------- ERROR ----------------------|')
+            ESCRIBIR('  |          En estos momentos no contamos con       |')
+            ESCRIBIR('  |                asientos disponibles              |')
+            ESCRIBIR('  +--------------------------------------------------+')
+            ESCRIBIR('         Presione dos veces (enter) para salir...');
+            LEER()
+            ROMPER
+        FIN
+
+        LIMPIAR_PANTALLA
+
+        REPETIR 
+            ESCRIBIR('')
+            ESCRIBIR(' +----------------------------------+')
+            ESCRIBIR(' |-- Ingrese su nombre y apellido --|')
+            ESCRIBIR(' +----------------------------------+')
+            LEER(nombre)
+
+            codigoError := 0; //Inicializar la variable
+
+            PARA i DESDE 1 HASTA LONGITUD(nombre) HACER 
+            INICIO
+                SI NO (nombre[i] EN ['A'..'Z', 'a'..'z', ' ']) ENTONCES
+                INICIO
+                    codigoError := 1; /
+                    BREAK
+                FIN
+            FIN
+
+            LIMPIAR_PANTALLA
+        HASTA codigoError = 0; 
+
+        REPETIR
+            ESCRIBIR('')
+            ESCRIBIR(' +----------------------------------+')
+            ESCRIBIR(' |-------- Ingrese su cédula -------|')
+            ESCRIBIR(' +----------------------------------+')
+            LEER(cedula)
+            Validar (cedula, numero, codigoError)
+            LIMPIAR_PANTALLA
+        HASTA codigoError = 0
+
+        REPEAT 
+            ESCRIBIR(' +----------------------------------------------------+')
+            ESCRIBIR(' |  ¿Usted está viajando con niños menores de 3 años? |')
+            ESCRIBIR(' |----------------------------------------------------|')
+            ESCRIBIR(' |------------------ 1.Si --- 2.No -------------------|')
+            ESCRIBIR(' +----------------------------------------------------+')
+            LEER(infante)
+            LIMPIAR_PANTALLA;  
+        HASTA (infante = '1') O (infante = '2'); 
+
+        SEGUN infante HACER
+            '1':
+            INICIO
+                cantbolex := 0; //inicializar variable
+
+                REPETIR
+                    REPETIR
+                        ESCRIBIR(' +--------------------------------------------------+')
+                        ESCRIBIR(' |---- Ingrese la cantidad de boletos especiales ---|')
+                        ESCRIBIR(' |------------ (niños menores de 3 años) -----------|')
+                        ESCRIBIR(' +--------------------------------------------------+')
+                        LEER(cantbolex1)
+                        LIMPIAR_PANTALLA
+
+                        VALIDAR (cantbolex1, numero, codigoError); 
+                        cantbolex := StrToInt(cantbolex1); // Transformación a entero
+
+                        SI cantbolex > asidisp ENTONCES
+                            ESCRIBIR('')
+                            ESCRIBIR('       ERROR: la cantidad de boletos ingresada')
+                            ESCRIBIR('         sobrepasa los asientos disponibles')
+                            ESCRIBIR('')
+                    HASTA cantbolex <= asidisp
+                HASTA codigoError = 0
+            FIN
+
+            '2':
+            INICIO
+                ESCRIBIR(' +---------------------------------------------------+')
+                ESCRIBIR(' |      Usted no viaja con niños menores de 3 años   |')
+                ESCRIBIR(' +---------------------------------------------------+')
+            FIN
+	FIN
+
+	LIMPIAR_PANTALLA
+
+	ESCRIBIR('') 
+	ESCRIBIR(' +---------------------------------------------------+')
+	ESCRIBIR(' |------------ A continuación se mostrarán ----------|')
+	ESCRIBIR(' +---- las estaciones y tramos que puedes visitar ---|')
+	ESCRIBIR(' +---------------------------------------------------+')
+	ESCRIBIR(' |---- Estaciones ---|------------ Tramos -----------|')
+	ESCRIBIR(' |-------------------|-------------------------------|') 
+	ESCRIBIR(' |  1. Barinitas     | 1. Barinitas - La Montaña     |')
+	ESCRIBIR(' |  2. La Montaña    | 2. La Montana - La Aguada     |')
+	ESCRIBIR(' |  3. La Aguada     | 3. La Aguada - Loma Redonda   |')
+	ESCRIBIR(' |  4. Loma Redonda  | 4. Loma Redonda - Pico Espejo |')
+	ESCRIBIR(' |  5. Pico Espejo   |                               |')
+	ESCRIBIR(' +---------------------------------------------------+')
+	ESCRIBIR(' |  Usted se encuentra en Barinitas, puede viajar a  |')  
+	ESCRIBIR(' |  un tramo específico o recorrer todos los tramos. |')  
+	ESCRIBIR(' |    Todos los boletos son de ida y vuelta y los    |')
+	ESCRIBIR(' |    niños menores de 12 deben ir con un adulto.    |')
+	ESCRIBIR(' +---------------------------------------------------+');
+	ESCRIBIR('')
+
+	REPETIR // Validar que los bebés no viajen a Pico Espejo
+   	 REPETIR // Validar la estación ingresada
+        	ESCRIBIR(' +---------------------------------------------------+');
+        	ESCRIBIR(' |------ Indique la estación que desea visitar ------|');
+        	ESCRIBIR(' +---------------------------------------------------+');
+        	LEER(estacion); // Leer la estación ingresada
+
+   	        SEGÚN (estacion) HACER
+       		 '2': 
+                   INICIO
+           	   tramo := 1
+           	   est2 := 'La Montana
+                   FIN
+
+        	'3': 
+                   INICIO
+           	   tramo := 2
+           	   est2 := 'La Aguada'
+                   FIN
+
+        	'4': 
+                   INICIO
+           	   tramo := 3
+           	   est2 := 'Loma Redonda'
+                   FIN
+
+       		 '5': 
+                    INICIO
+          	    tramo := 4;
+           	    est2 := 'Pico Espejo';
+                    FIN
+   		 FIN SEGÚN
+
+        LIMPIAR_PANTALLA
+	HASTA (tramo <> 0) 
+
+	SI (tramo = 4) Y (infante = '1') ENTONCES
+ 	   ESCRIBIR(' +---------------------------------------------------+')
+  	   ESCRIBIR(' |           Usted no puede ir a Pico Espejo         |')
+   	   ESCRIBIR(' |             con niños menores de 3 años           |')
+    	   ESCRIBIR(' +---------------------------------------------------+')
+	HASTA QUE NO (tramo = 4) Y (infante = '1')
+
+        LIMPIAR_PANTALLA
+        
+        REPETIR 
+         ESCRIBIR('     +--------------------------------------------------+')
+         ESCRIBIR('     |-------------- Boletos disponibles: asidisp  -----|')
+         ESCRIBIR('     |--------------------------------------------------|')              
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |      ¡Lea cuidadosamente nuestras tarifas!       |')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |   1.Boleto general(Adultos): ............. $20   |')  
+         ESCRIBIR('     |     Precio por tramo: ..................... $5   |')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |   2.Boleto Kids(3 a 12 años): ............ $12   |')
+         ESCRIBIR('     |     Precio por tramo: ..................... $3   |')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |   3.Boleto preferencial(60 años o más): .. $12   |')  
+         ESCRIBIR('     |     Precio por tramo: ..................... $3   |')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |--------------------------------------------------|')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     |   4.Boleto exonerado(menores de 3 años): GRATIS  |')
+         ESCRIBIR('     |         Los niños menores de 3 años serán        |')  
+         ESCRIBIR('     |          exonerados el pago. Sin embargo         |')
+         ESCRIBIR('     |     ¡SOLO PUEDEN VIAJAR HASTA LOMA REDONDA!      |')
+         ESCRIBIR('     |                                                  |')
+         ESCRIBIR('     +--------------------------------------------------+')
+         ESCRIBIR('              Presione (enter) para continuar...')
+         LEER ()
+
+         LIMPIAR_PANTALLA
+
+         REPETIR 
+         //Inicializar variables en 0
+         cantbolg := 0
+         cantboln := 0
+         cantbolv := 0
+    
+           ESCRIBIR(' +--------------------------------------------------+')
+           ESCRIBIR(' |-------------- ¡Empecemos la compra! -------------|')
+           ESCRIBIR(' +--------------------------------------------------+')  
+           ESCRIBIR(' +--------------------------------------------------+')
+           ESCRIBIR(' |---- Ingrese la cantidad de boletos generales ----|')
+           ESCRIBIR(' +--------------------------------------------------+')  
+           LEER(cantbolg1) 
+           VALIDAR (cantbolg1, numero, codigoError)
+           LIMPIAR_PANTALLA  
+         HASTA QUE codigoError = 0 /
+         cantbolg := cantbolg + CONVERTIR_A_ENTERO (cantbolg1) 
+
+          REPETIR 
+            ESCRIBIR(' +----------------------------------+')
+            ESCRIBIR(' |  ¿Usted está viajando con niños? |')
+            ESCRIBIR(' |----------------------------------|')
+            ESCRIBIR(' |---------- 1.Si --- 2.No ---------|')
+            ESCRIBIR(' +----------------------------------+')
+            LEER(optionn) 
+            LIMPIAR_PANTALLA  
+          HASTA QUE (optionn = '1') O (optionn = '2') // Fin del repeat
+
+    	SEGUN optionn HACER 
+    	'1':
+   	 INICIO
+           REPETIR 
+             ESCRIBIR(' +--------------------------------------------------+')
+             ESCRIBIR(' |------- Ingrese la cantidad de Boletos Kids ------|')
+             ESCRIBIR(' |-------------- (niños de 3 a 12 años) ------------|')
+             ESCRIBIR(' +--------------------------------------------------+')
+             LEER(cantboln1) 
+             VALIDAR (cantboln1, numero, codigoError)
+             LIMPIAR_PANTALLA  
+           HASTA QUE codigoError = 0 
+        
+           cantboln := CONVERTIR_A_ENTERO(cantboln1) 
+
+           REPETIR 
+             ESCRIBIR(' +----------------------------------+')
+             ESCRIBIR(' |     ¿Usted está viajando con     |')
+             ESCRIBIR(' |   personas de la tercera edad?   |')
+             ESCRIBIR(' |----------------------------------|')
+             ESCRIBIR(' |---------- 1.Si --- 2.No ---------|')
+             ESCRIBIR(' +----------------------------------+')
+             LEER(option1) 
+             LIMPIAR_PANTALLA  
+           HASTA QUE (option1 = '1') O (option1 = '2') 
+
+           SI option1 = '1' ENTONCES 
+           INICIO
+              REPETIR 
+                ESCRIBIR(' +--------------------------------------------------+')
+                ESCRIBIR(' |-- Ingrese la cantidad de boletos preferenciales -|')
+                ESCRIBIR(' +--------------------------------------------------+')  
+                LEER(cantbolv1) 
+                VALIDAR(cantbolv1, numero, codigoError) 
+                LIMPIAR_PANTALLA  
+              HASTA QUE codigoError = 0 
+            
+            cantbolv := CONVERTIR_A_ENTERO(cantbolv1) 
+            FIN 
+        FIN 
+
+	'2': 
+    	INICIO
+           REPETIR 
+               ESCRIBIR(' +----------------------------------+')
+               ESCRIBIR(' |     ¿Usted está viajando con     |')
+               ESCRIBIR(' |   personas de la tercera edad?   |')
+               ESCRIBIR(' |----------------------------------|')
+               ESCRIBIR(' |---------- 1.Si --- 2.No ---------|')
+               ESCRIBIR(' +----------------------------------+')
+               LEER(option1) 
+               LIMPIAR_PANTALLA  
+           HASTA QUE (option1 = '1') O (option1 = '2') 
+
+           SI option1 = '1' ENTONCES 
+           INICIO
+               REPETIR 
+                   ESCRIBIR(' +--------------------------------------------------+')
+                   ESCRIBIR(' |-- Ingrese la cantidad de boletos preferenciales -|')
+                   ESCRIBIR(' +--------------------------------------------------+')  
+                   LEER(cantbolv) 
+                   VALIDAR (cantbolv1, numero, codigoError) 
+                   LIMPIAR_PANTALLA  
+               HASTA QUE codigoError = 0 
+            
+               cantbolv := CONVERTIR_A_ENTERO(cantbolv1) /
+
+           FIN 
+       FIN 
+   FIN 
+
+   LIMPIAR_PANTALLA 
+
+   // Inicializar variables
+   bolven := (cantbolg + cantboln + cantbolv) 
+   SI (bolven > asidisp) ENTONCES 
+       ESCRIBIR('+-------------------------------------------------------------+')
+       ESCRIBIR('|--------------------------- ERROR ---------------------------|')
+       ESCRIBIR('|  ¡Su factura no pudo ser procesada! La cantidad de boletos  |')
+       ESCRIBIR('|   ingresada (', bolven, ') sobrepasa los boletos disponibles |')
+       ESCRIBIR('+-------------------------------------------------------------+')  
+   HASTA QUE (bolven <= asidisp)
+
+    //calcular la cantidad de boletos
+    bolven := (cantbolg + cantboln + cantbolv) 
+
+    // Calcular precios por tipo de boleto
+    pbolg := tramo * cantbolg * 5 
+    pboln := tramo * cantboln * 3 
+    pbolv := tramo * cantbolv * 3 
+    pbolex := tramo * cantbolex * 0 
+
+    // Calcular monto total
+    mtotal := pbolg + pboln + pbolex + pbolv 
+
+    // Calcular  ventas realizadas
+    ventas := ventas + 1 
+
+    LIMPIAR_PANTALLA
+
+    // Mostrar encabezado de la factura
+    ESCRIBIR('')
+    ESCRIBIR('  ----------------------------------')
+    ESCRIBIR('  ------------- Factura ------------')
+    ESCRIBIR('  ----------------------------------')
+
+    // Mostrar información del cliente
+    ESCRIBIR('  Nombre: ', nombre, '              ')
+    ESCRIBIR('  Cedula: ', cedula)
+    ESCRIBIR('  ----------------------------------')
+
+    // Mostrar detalles del viaje
+    ESCRIBIR('  Tramos recorridos: ', tramo)
+    ESCRIBIR('  Estacion de salida: ', est1)
+    ESCRIBIR('  Estacion de llegada: ', est2)
+    ESCRIBIR('  ----------------------------------')
+
+    // Mostrar detalles de boletos y precios
+    ESCRIBIR('  Boletos generales: ', cantbolg, ' ........ $', pbolg)
+    ESCRIBIR('  Boletos kids: ', cantboln, ' ............. $', pbolk)
+    ESCRIBIR('  Boletos preferenciales: ', cantbolv, ' ... $', pbolp)
+    ESCRIBIR('  Menores exonerados: ', cantbolex, ' ....... $', pbolex)
+    ESCRIBIR('  ----------------------------------')
+
+    // Mostrar totales
+    ESCRIBIR('  Total de boletos: ............ ', bolven)
+    ESCRIBIR('  ----------------------------------')
+    ESCRIBIR('  Total a pagar: ............. $', mtotal)
+    ESCRIBIR('  ----------------------------------')
+    ESCRIBIR('')
+    ESCRIBIR('  Presione (enter) para continuar...')
+    LEER() 
+
+    // Calcular asientos disponibles
+    asidisp := asidisp - bolven // Actualizar asientos disponibles
+
+    // Calcular asientos ocupados
+    tbolven := tbolven + bolven // Sumar total de boletos vendidos
+
+    // Sumar cantidad de boletos en cada venta
+    tbolg := tbolg + cantbolg 
+    tbolk := tbolk + cantboln 
+    tbolp := tbolp + cantbolv
+    tbole := tbole + cantbolex 
+
+    // Sumar montos en cada venta
+    mfg := mfg + pbolg 
+    mfk := mfk + pbolk 
+    mfp := mfp + pbolp 
+    mf := mf + mtotal 
+
+    FIN
+    
+    '2':
+    BEGIN 
+    LIMPIAR_PANTALLA     
+        // Mostrar encabezado del reporte
+        ESCRIBIR('')
+        ESCRIBIR('  ----------------------------------')
+        ESCRIBIR('  --------- Reporte del día --------')
+        ESCRIBIR('  ----------------------------------')
+        
+        // Mostrar ventas y asientos
+        ESCRIBIR('  Ventas realizadas: ', ventas)
+        ESCRIBIR('  Asientos disponibles: ', asidisp)
+        ESCRIBIR('  Asientos ocupados: ', tbolven)
+        ESCRIBIR('  ----------------------------------')
+        
+        // Mostrar boletos vendidos
+        ESCRIBIR('  -------- Boletos vendidos --------')
+        ESCRIBIR('  ----------------------------------')
+        ESCRIBIR('  Boletos generales: ', tbolg)
+        ESCRIBIR('  Boletos Kids: ', tbolk)
+        ESCRIBIR('  Boletos preferenciales: ', tbolp)
+        ESCRIBIR('  Menores exonerados: ', tbole)
+        ESCRIBIR('  ----------------------------------')
+        
+        // Mostrar total de boletos vendidos
+        ESCRIBIR('  Total de boletos vendidos: ', tbolven)
+        ESCRIBIR('  ----------------------------------')
+        
+        // Mostrar montos
+        ESCRIBIR('  ------------- Montos -------------')
+        ESCRIBIR('  ----------------------------------')
+        ESCRIBIR('  Boletos generales: $', mfg)
+        ESCRIBIR('  Boletos Kids: $', mfk)
+        ESCRIBIR('  Boletos preferenciales: $', mfp)
+        ESCRIBIR('  ----------------------------------')
+        
+        // Mostrar monto total
+        ESCRIBIR('  Monto total: $', mf)
+        ESCRIBIR('  ----------------------------------')
+        
+        ESCRIBIR(' Presione (enter) para volver al menú')
+        LEER() 
+    LIMPIAR_PANTALLA
+    FIN
+    
+    '3':
+    BEGIN 
+        ESCRIBIR('    +--------------------------------------------------+')
+        ESCRIBIR('    |-------- Gracias por visitar el Teleférico -------|')
+        ESCRIBIR('    |----------------- ¡Vuelva pronto! ----------------|')
+        ESCRIBIR('    +--------------------------------------------------+')
+        ESCRIBIR('          Presione dos veces (enter) para salir...')
+        LEER() 
+        LIMPIAR_PANTALLA
+    FIN
+FIN
+
+// Reiniciar variables para evitar errores al repetir
+cantbolg := 0
+cantboln := 0
+cantbolv := 0
+cantbolex := 0
+
+HASTA QUE (option = 3) 
+FIN
+
+
+
+
+
+
+
