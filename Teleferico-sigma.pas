@@ -363,7 +363,7 @@ Repeat //repeat de las opciones del menu
 								writeln(' +--------------------------------------------------+');
 								writeln(' |-- Ingrese la cantidad de boletos preferenciales -|');
 								writeln(' +--------------------------------------------------+');	
-								readln (cantbolv);
+								readln (cantbolv1);
 								Val(cantbolv1, numero, codigoError);
 								clrscr;	
 							until codigoError = 0;//fin del repeat de validacion
